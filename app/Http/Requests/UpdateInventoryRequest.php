@@ -13,7 +13,8 @@ class UpdateInventoryRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        // Assume authentication is handled for this assessment.
+        return true;
     }
 
     /**
@@ -24,7 +25,6 @@ class UpdateInventoryRequest extends FormRequest
     public function rules()
     {
         return [
-            //
         ];
     }
 }

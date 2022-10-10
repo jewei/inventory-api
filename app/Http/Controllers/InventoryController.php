@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreInventoryRequest;
 use App\Http\Requests\UpdateInventoryRequest;
+use App\Http\Resources\InventoryResource;
 use App\Models\Inventory;
+use Illuminate\Support\Arr;
 
 class InventoryController extends Controller
 {
@@ -15,72 +16,25 @@ class InventoryController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreInventoryRequest  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(StoreInventoryRequest $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Inventory  $inventory
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Inventory $inventory)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Inventory  $inventory
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Inventory $inventory)
-    {
-        //
+        return InventoryResource::collection(Inventory::all());
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateInventoryRequest  $request
-     * @param  \App\Models\Inventory  $inventory
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateInventoryRequest $request, Inventory $inventory)
+    public function randomAction(UpdateInventoryRequest $request)
     {
-        //
-    }
+        // Randomly choose 3 items.
+        $threeInventories = Inventory::inRandomOrder()->limit(3)->get();
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Inventory  $inventory
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Inventory $inventory)
-    {
-        //
+        // Randomly add / minus 1 unit of quantity.
+        $threeInventories->each(function ($item) {
+            $method = Arr::random(['increment', 'decrement']);
+            $item->{$method}('quantity');
+        });
+
+        return $this->index();
     }
 }
