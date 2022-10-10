@@ -19,3 +19,10 @@ For simple add/deduct inventory's quantity.
 5. Run DB migration and seeding `./vendor/bin/sail artisan migrate:fresh --seed`.
 6. Send a couple of API requests with `curl --request POST --url http://localhost/api/inventories/random`.
 7. Run the worker manually `./vendor/bin/sail artisan queue:work`.
+
+## Assumptions
+
+1. API authentications and authorization are not handled in this demo app.
+2. Rate limiting is following Laravel's default: max 60 attempts per minute by IP address.
+3. If APIs were authenticated, `uniqueId` should be use and define the job unique key with sender's ID.
+4. The API should return a unique request ID. With this ID the API sender can check the result of the sent API. (Out of scope for now)
