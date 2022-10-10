@@ -17,7 +17,8 @@ class InventoryFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'name' => implode(' ', fake()->unique()->words(2)),
+            'quantity' => 10,
         ];
     }
 }
