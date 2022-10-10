@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\UpdateInventoryQuantity;
 use App\Http\Requests\UpdateInventoryRequest;
 use App\Http\Resources\InventoryResource;
 use App\Models\Inventory;
@@ -31,8 +32,10 @@ class InventoryController extends Controller
 
         // Randomly add / minus 1 unit of quantity.
         $threeInventories->each(function ($item) {
-            $method = Arr::random(['increment', 'decrement']);
-            $item->{$method}('quantity');
+            $amount = Arr::random([1, -1]);
+
+            // Async update quantity with queue.
+            UpdateInventoryQuantity::dispatch($item, $amount);
         });
 
         return $this->index();
